@@ -1,0 +1,116 @@
+import java.util.Scanner;
+
+class Account {
+    private double balance;
+
+    // Constructor to initialize the balance (ensure balance is greater than 1000.0)
+    public Account(double initialBalance) {
+        if (initialBalance > 1000.0) {
+            this.balance = initialBalance;
+        } else {
+            System.out.println("Initial balance must be greater than 1000.0");
+        }
+    }
+
+    // Method to add amount to balance
+    public void credit(double amount) {
+        balance += amount;
+        System.out.println("Amount credited successfully. New balance: " + balance);
+    }
+
+    // Method to withdraw money from the account
+    public void debit(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            System.out.println("Amount debited successfully. New balance: " + balance);
+        } else {
+            System.out.println("Debit amount exceeded account balance. Transaction cancelled.");
+        }
+    }
+
+    // Method to get the current balance
+    public void getBalance() {
+        System.out.println("Current balance: " + balance);
+    }
+
+    // Method to exit from the individual transaction
+    public void exit() {
+        System.out.println("Exiting from the transaction.");
+    }
+}
+
+public class BankApplication {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome to SBI Bank!");
+
+        // Assuming two branches with 5 customers each
+        Account[][] accounts = new Account[2][5];
+
+        // Initializing accounts for both branches
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 5; j++) {
+                // Replace the initial balance value with the desired initial balance
+                accounts[i][j] = new Account(2000.0);
+            }
+        }
+
+        boolean exitApplication = false;
+
+        while (!exitApplication) {
+            System.out.print("Enter Branch Name: ");
+            String branchName = scanner.next();
+
+            System.out.print("Enter Account Number: ");
+            int accountNumber = scanner.nextInt();
+
+            // Assuming branchName is either "Basar" or "Nizambad"
+            int branchIndex = branchName.equalsIgnoreCase("Basar") ? 0 : 1;
+
+            // Assuming accountNumber is between 1 and 5
+            int accountIndex = accountNumber - 1;
+
+            // Performing transactions for the selected account
+            System.out.println("1. Credit");
+            System.out.println("2. Debit");
+            System.out.println("3. Get Balance");
+            System.out.println("4. Exit");
+
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter credit amount: ");
+                    double creditAmount = scanner.nextDouble();
+                    accounts[branchIndex][accountIndex].credit(creditAmount);
+                    break;
+
+                case 2:
+                    System.out.print("Enter debit amount: ");
+                    double debitAmount = scanner.nextDouble();
+                    accounts[branchIndex][accountIndex].debit(debitAmount);
+                    break;
+
+                case 3:
+                    accounts[branchIndex][accountIndex].getBalance();
+                    break;
+
+                case 4:
+                    accounts[branchIndex][accountIndex].exit();
+                    System.out.print("Exit application? (Yes/No): ");
+                    String exitChoice = scanner.next();
+                    if (exitChoice.equalsIgnoreCase("Yes")) {
+                        exitApplication = true;
+                    }
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+            }
+        }
+
+        scanner.close();
+    }
+}

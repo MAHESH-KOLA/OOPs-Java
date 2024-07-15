@@ -1,0 +1,172 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Vehicle {
+    String company;
+    String model;
+    double mileage;
+    double fuelCapacity;
+    double displacement;
+
+    public Vehicle(String company, String model, double mileage, double fuelCapacity, double displacement) {
+        this.company = company;
+        this.model = model;
+        this.mileage = mileage;
+        this.fuelCapacity = fuelCapacity;
+        this.displacement = displacement;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public double getMileage() {
+        return mileage;
+    }
+
+    public double getFuelCapacity() {
+        return fuelCapacity;
+    }
+
+    public double getDisplacement() {
+        return displacement;
+    }
+}
+
+class TwoWheeler extends Vehicle {
+    String frontBrake;
+    String rearBrake;
+    String tyreType;
+    String headLamp;
+    String userReviews;
+
+    public TwoWheeler(String company, String model, double mileage, double fuelCapacity, double displacement,
+                      String frontBrake, String rearBrake, String tyreType, String headLamp, String userReviews) {
+        super(company, model, mileage, fuelCapacity, displacement);
+        this.frontBrake = frontBrake;
+        this.rearBrake = rearBrake;
+        this.tyreType = tyreType;
+        this.headLamp = headLamp;
+        this.userReviews = userReviews;
+    }
+}
+
+class FourWheeler extends Vehicle {
+    boolean airConditioner;
+    boolean airBags;
+    boolean powerSteering;
+    boolean rainSensingWiper;
+
+    public FourWheeler(String company, String model, double mileage, double fuelCapacity, double displacement,
+                       boolean airConditioner, boolean airBags, boolean powerSteering, boolean rainSensingWiper) {
+        super(company, model, mileage, fuelCapacity, displacement);
+        this.airConditioner = airConditioner;
+        this.airBags = airBags;
+        this.powerSteering = powerSteering;
+        this.rainSensingWiper = rainSensingWiper;
+    }
+}
+
+public class VehicleComparisonApp {
+    public static void main(String[] args) {
+        List<TwoWheeler> twoWheelers = new ArrayList<>();
+        twoWheelers.add(new TwoWheeler("Honda", "CBR", 40.0, 10.0, 250.0,
+                "Disc", "Disc", "Tubeless", "LED", "Positive"));
+        twoWheelers.add(new TwoWheeler("Yamaha", "FZ", 35.0, 12.0, 200.0,
+                "Disc", "Disc", "Tubeless", "Halogen", "Neutral"));
+        // Add more 2-wheelers
+
+        List<FourWheeler> fourWheelers = new ArrayList<>();
+        fourWheelers.add(new FourWheeler("Toyota", "Corolla", 20.0, 50.0, 1500.0,
+                true, true, true, true));
+        fourWheelers.add(new FourWheeler("Honda", "Civic", 18.0, 48.0, 1600.0,
+                true, true, true, true));
+        // Add more 4-wheelers
+
+        displayVehicleDetails(twoWheelers, fourWheelers);
+        compareAndDisplayResult(twoWheelers, fourWheelers);
+    }
+
+    private static void displayVehicleDetails(List<TwoWheeler> twoWheelers, List<FourWheeler> fourWheelers) {
+        System.out.println("List of 2-Wheelers:");
+        for (TwoWheeler twoWheeler : twoWheelers) {
+            System.out.println(twoWheeler.getCompany() + " " + twoWheeler.getModel());
+        }
+
+        System.out.println("\nList of 4-Wheelers:");
+        for (FourWheeler fourWheeler : fourWheelers) {
+            System.out.println(fourWheeler.getCompany() + " " + fourWheeler.getModel());
+        }
+    }
+
+    private static void compareAndDisplayResult(List<TwoWheeler> twoWheelers, List<FourWheeler> fourWheelers) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("\nEnter the number of vehicles to compare:");
+        int numVehicles = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        List<Vehicle> selectedVehicles = new ArrayList<>();
+
+        for (int i = 0; i < numVehicles; i++) {
+            System.out.println("Enter the company and model of the vehicle " + (i + 1) + ":");
+            String company = scanner.nextLine();
+            String model = scanner.nextLine();
+
+            // Check if the selected vehicle is a 2-wheeler or 4-wheeler and add it to the list
+            TwoWheeler selectedTwoWheeler = findTwoWheeler(twoWheelers, company, model);
+            if (selectedTwoWheeler != null) {
+                selectedVehicles.add(selectedTwoWheeler);
+            } else {
+                FourWheeler selectedFourWheeler = findFourWheeler(fourWheelers, company, model);
+                if (selectedFourWheeler != null) {
+                    selectedVehicles.add(selectedFourWheeler);
+                } else {
+                    System.out.println("Invalid company or model. Please try again.");
+                    i--;
+                }
+            }
+        }
+
+        // Compare the selected vehicles
+        Vehicle bestModel = getBestModel(selectedVehicles);
+        System.out.println("\nBest model to buy: " + bestModel.getCompany() + " " + bestModel.getModel());
+
+        scanner.close();
+    }
+
+    private static TwoWheeler findTwoWheeler(List<TwoWheeler> twoWheelers, String company, String model) {
+        for (TwoWheeler twoWheeler : twoWheelers) {
+            if (twoWheeler.getCompany().equalsIgnoreCase(company) && twoWheeler.getModel().equalsIgnoreCase(model)) {
+                return twoWheeler;
+            }
+        }
+        return null;
+    }
+
+    private static FourWheeler findFourWheeler(List<FourWheeler> fourWheelers, String company, String model) {
+        for (FourWheeler fourWheeler : fourWheelers) {
+            if (fourWheeler.getCompany().equalsIgnoreCase(company) && fourWheeler.getModel().equalsIgnoreCase(model)) {
+                return fourWheeler;
+            }
+        }
+        return null;
+    }
+
+    private static Vehicle getBestModel(List<Vehicle> selectedVehicles) {
+        Vehicle bestModel = null;
+
+        for (Vehicle vehicle : selectedVehicles) {
+            if (bestModel == null || vehicle.getMileage() > bestModel.getMileage()) {
+                bestModel = vehicle;
+            }
+        }
+
+        return bestModel;
+    }
+}
